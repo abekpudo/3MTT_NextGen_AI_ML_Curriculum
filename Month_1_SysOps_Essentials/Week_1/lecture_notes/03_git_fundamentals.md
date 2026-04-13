@@ -1,398 +1,107 @@
- Lecture 3: Git Fundamentals
+ Git Fundamentals: Mastering Modern Version Control
 
- Why Git Matters
+ 1. Introduction
+Git is the industry-standard version control system for software development, data science, and DevOps. This lecture will take you from the basics to advanced workflows, with hands-on examples and best practices used by top engineering teams.
 
-Git is the most important tool in professional software development. Understanding it deeply is non-negotiable. Every single project you'll work on uses Git.
+ 2. Why Learn Git?
+- Collaboration: Enables teams to work on the same codebase without conflict.
+- History: Tracks every change, making it easy to review, revert, and audit code.
+- Experimentation: Branching allows for safe experimentation and parallel development.
+- Professionalism: Required for open source, internships, and nearly all tech jobs.
 
----
+ 3. Core Concepts
 
- 🎯 Learning Objectives
+ 3.1. Repositories
+- Local Repository: Your working directory, staging area (index), and local commit history.
+- Remote Repository: Hosted on platforms like GitHub, GitLab, or Bitbucket.
+- Cloning: `git clone <repo-url>` creates a local copy of a remote repo.
 
-- ✅ Understand version control concepts
-- ✅ Master Git basic commands
-- ✅ Understand Git workflow and staging
-- ✅ Work with branches effectively
-- ✅ Follow Git best practices
+ 3.2. The Commit Workflow
+1. Edit files in your working directory.
+2. Stage changes: `git add <file>`
+3. Commit: `git commit -m "Describe your change"`
+4. Push to remote: `git push origin <branch>`
 
----
+ 3.3. Branching and Merging
+- Branch: A parallel line of development. Create with `git branch <name>` or `git checkout -b <name>`
+- Merge: Combine changes from one branch into another. `git merge <branch>`
+- Rebase: Reapply commits on top of another base tip. `git rebase <branch>`
+- Best Practice: Use feature branches for new work; keep `main` stable.
 
- 📖 What is Git?
+ 3.4. Inspecting History
+- Log: `git log` shows commit history.
+- Diff: `git diff` shows changes between commits or branches.
+- Blame: `git blame <file>` shows who last modified each line.
 
-Git is a distributed version control system that allows you to:
-- Track changes to your code over time
-- Collaborate with others
-- Revert to previous versions
-- Create branches for experimental features
-- Maintain code history
+ 3.5. Undoing Changes
+- Reset: Move HEAD and optionally working directory. `git reset --hard <commit>`
+- Checkout: Restore files or switch branches. `git checkout <branch>` or `git checkout <file>`
+- Revert: Create a new commit that undoes a previous one. `git revert <commit>`
+- Reflog: View all recent HEAD movements. `git reflog`
 
- Why Distributed?
-Unlike centralized systems, Git stores the complete history locally on your machine AND on a server (like GitHub). Everyone has a full backup.
+ 3.6. Remote Collaboration
+- Fetch: Download new data from remote. `git fetch`
+- Pull: Fetch and merge. `git pull`
+- Push: Upload local commits. `git push`
+- Forks and Upstream: Contribute to projects you don’t own by forking and submitting pull requests.
 
----
+ 4. Hands-On Examples
 
- 🔄 Git Workflow
-
- The Three Stages of Git
-
-```
-Working Directory  →  Staging Area  →  Repository (.git)
-   (your files)      (git add)       (git commit)
-```
-
-Working Directory: Where you edit files
-Staging Area: Where you prepare changes for commit
-Repository: Where Git stores your history
-
----
-
- 📝 Essential Git Commands
-
- Initial Setup
-
-```bash
- Configure Git (one-time)
-git config --global user.name "Your Name"
-git config --global user.email "your@email.com"
-git config --global core.editor "vim"
-```
-
- Creating a Repository
-
-```bash
- Method 1: Initialize local repository
-cd my-project
-git init
-
- Method 2: Clone existing repository
-git clone https://github.com/username/repo.git
+ 4.1. Creating a New Repository
+```sh
+git init myproject
+cd myproject
+echo " My Project" > README.md
+git add README.md
+git commit -m "Initial commit"
 ```
 
- Checking Status
-
-```bash
- See current status
-git status
-
- See detailed changes
-git diff                     Changes not staged
-git diff --staged            Changes staged for commit
-git diff HEAD~1              Compare with last commit
-```
-
- Making Changes
-
-```bash
- Stage specific files
-git add file1.py file2.py
-
- Stage all changes
+ 4.2. Typical Feature Branch Workflow
+```sh
+git checkout -b feature/login
+ Make changes
 git add .
-
- Unstage a file
-git reset file1.py
-
- Discard changes (be careful!)
-git restore file1.py
+git commit -m "Add login feature"
+git push origin feature/login
+ Open a pull request on GitHub
 ```
 
- Committing
+ 4.3. Resolving Merge Conflicts
+1. Try to merge: `git merge feature/login`
+2. If there’s a conflict, Git will mark the files.
+3. Edit the files to resolve the conflict.
+4. `git add <file>` and `git commit` to complete the merge.
 
-```bash
- Create a commit
-git commit -m "Clear description of changes"
-
- Add and commit in one step
-git commit -am "Message"
-
- Amend last commit (only if not pushed)
-git commit --amend --no-edit
+ 4.4. Undoing a Mistake
+```sh
+git log  Find the commit hash
+git revert <commit-hash>  Safely undo a commit
 ```
 
- Viewing History
-
-```bash
- See commit history
-git log
-
- Pretty log format
-git log --oneline --graph --all
-
- See specific file history
-git log -- filename.py
-
- See who changed each line
-git blame filename.py
-```
-
----
-
- 🌳 Branching
-
-Branches allow you to work on features independently.
-
- Branch Commands
-
-```bash
- List branches
-git branch               Local only
-git branch -a            All branches (local + remote)
-
- Create a branch
-git branch feature-name
-git branch -b feature-name       Create and switch
-
- Switch branches
-git checkout feature-name
-git switch feature-name          Newer syntax
-
- Delete branch
-git branch -d feature-name       Local
-git push origin --delete feature-name   Remote
-
- Rename branch
-git branch -m old-name new-name
-```
-
- Merge Branches
-
-```bash
- Switch to target branch
-git checkout main
-
- Merge feature branch
-git merge feature-name
-
- If conflicts occur, resolve them manually, then:
-git add .
-git commit -m "Resolve merge conflicts"
-```
-
----
-
- 🔗 Working with Remote Repositories
-
- Remote Commands
-
-```bash
- List remote repositories
-git remote -v
-
- Add remote
-git remote add origin https://github.com/username/repo.git
-
- Fetch changes (download, don't merge)
-git fetch origin
-
- Pull changes (fetch + merge)
-git pull origin main
-
- Push changes
-git push origin main
-
- Set upstream (so you can just 'git push')
-git push -u origin main
-git branch -u origin/main
-```
-
----
-
- 💡 Git Best Practices
-
- Commit Messages
-Good commit messages are crucial.
-
-```
-✅ GOOD
-- git commit -m "Add user authentication to login page"
-- git commit -m "Fix null pointer exception in data processor"
-- git commit -m "Refactor database connection pooling"
-
-❌ BAD
-- git commit -m "fix stuff"
-- git commit -m "changes"
-- git commit -m "asdfgh"
-```
-
-Format:
-```
-[Type] Brief description (50 chars max)
-
-Optional longer description explaining:
-- What changed and why
-- Any side effects
-- Related issues
-
-Example:
-feat: Add email verification for new users
-
-- Implement email verification flow
-- Add verification token generation
-- Update user model with email_verified field
-- Closes 123
-```
-
- Types of Commits
-- feat: New feature
-- fix: Bug fix
-- refactor: Code reorganization
-- style: Formatting (no logic change)
-- test: Add tests
-- docs: Documentation
-- chore: Maintenance tasks
-
- Branching Strategy
-
-```
-main (production-ready code)
-  ↑
-develop (integration branch)
-  ↑
-feature/* (individual features)
-```
-
-Example workflow:
-```bash
- Create feature branch from develop
-git checkout develop
-git pull
-git checkout -b feature/user-auth
-
- Work on feature
- Commit regularly
-
- Prepare for merge
-git pull origin develop   Get latest changes
-
- Merge back to develop
-git checkout develop
-git pull
-git merge feature/user-auth
-git push origin develop
-
- Delete feature branch
-git branch -d feature/user-auth
-```
-
----
-
- ⚠️ Common Mistakes & Fixes
-
- Committed to Wrong Branch
-
-```bash
- Undo last commit (keep changes)
-git reset --soft HEAD~1
-git stash
-git checkout correct-branch
-git stash pop
-git commit -m "proper message"
-```
-
- Need to Undo Commits
-
-```bash
- Undo last 3 commits (keep changes)
-git reset --soft HEAD~3
-
- Undo last 3 commits (discard changes)
-git reset --hard HEAD~3
-```
-
- Accidentally Deleted Branch
-
-```bash
- See recent commits
-git reflog
-
- Recreate branch
-git checkout -b branch-name <commit-hash>
-```
-
----
-
- 🆘 Debugging Git
-
-```bash
- Check Git configuration
-git config --list
-
- Verify remote setup
-git remote -v
-
- Check branches and commits
-git log --oneline --all --graph
-
- Find a lost commit
-git reflog
-
- Get help on any command
-git help commit
-```
-
----
-
- 📊 Git Workflow Visualization
-
-```
-┌─────────────────────────────────────────────────┐
-│         Working Directory                        │
-│      (your files on disk)                        │
-│                                                  │
-│  edited_file.py (modified)                      │
-│  new_file.py (untracked)                        │
-└─────────────────────────────────────────────────┘
-              ↓ git add .
-┌─────────────────────────────────────────────────┐
-│         Staging Area                             │
-│      (files to be committed)                     │
-│                                                  │
-│  edited_file.py                                 │
-│  new_file.py                                    │
-└─────────────────────────────────────────────────┘
-         ↓ git commit -m "message"
-┌─────────────────────────────────────────────────┐
-│       Local Repository                           │
-│      (.git folder history)                       │
-│                                                  │
-│  commit abc123 - added feature X                │
-│  commit def456 - fixed bug Y                    │
-│  commit ghi789 - initial commit                 │
-└─────────────────────────────────────────────────┘
-         ↓ git push
-┌─────────────────────────────────────────────────┐
-│      Remote Repository                           │
-│      (GitHub/GitLab/etc)                        │
-│                                                  │
-│  Same commit history as local                   │
-└─────────────────────────────────────────────────┘
-```
-
----
-
- ✅ Checklist: You Should Know
-
-- [ ] What the three stages of Git are
-- [ ] How to create and clone repositories
-- [ ] Basic commands: status, add, commit, log
-- [ ] How to create and merge branches
-- [ ] How to push and pull from remote
-- [ ] Best practices for commit messages
-- [ ] How to handle common Git problems
-
----
-
- 📚 Next Steps
-
-1. Practice these commands in exercises
-2. Get comfortable with Git workflow
-3. Learn GitHub next
-4. Be prepared to use Git daily for rest of program
-
----
-
- 🔗 Additional Resources
-
-- [Pro Git Book (Free)](https://git-scm.com/book/en/v2)
+ 5. Best Practices
+- Write clear, descriptive commit messages.
+- Keep commits small and focused.
+- Use branches for all new work.
+- Pull and rebase often to stay up to date.
+- Never commit secrets or large data files. Use `.gitignore`.
+- Review code before merging.
+
+ 6. Advanced Topics
+- Tagging: Mark releases with `git tag v1.0.0`
+- Cherry-pick: Apply a commit from one branch to another: `git cherry-pick <commit>`
+- Stashing: Save work-in-progress: `git stash`, `git stash pop`
+- Hooks: Automate checks with pre-commit hooks
+
+ 7. Troubleshooting
+- Detached HEAD: Happens when you checkout a commit instead of a branch. Create a new branch to save your work.
+- Merge Conflicts: Use `git status` and a merge tool (e.g., VS Code, Meld) to resolve.
+- Accidental Commits: Use `git reset` or `git revert` as appropriate.
+
+ 8. Resources
+- [Pro Git Book](https://git-scm.com/book/en/v2)
+- [GitHub Flow Guide](https://guides.github.com/introduction/flow/)
+- [Atlassian Git Tutorials](https://www.atlassian.com/git/tutorials)
+- [Oh My Git! Interactive Game](https://ohmygit.org/)
 - [Git Cheatsheet](https://education.github.com/git-cheat-sheet-education.pdf)
-- [Visualizing Git](https://git-scm.com/book/en/v2/Git-Branching-Branch-Management)
-- [Understand Git Conceptually](https://www.sbf5.com/~cchambers/documentation/git.shtml)
+
+---

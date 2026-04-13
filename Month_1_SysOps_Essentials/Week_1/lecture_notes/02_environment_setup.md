@@ -1,303 +1,105 @@
- Lecture 2: Development Environment Setup
+ Environment Setup: Building a Modern, Reproducible Dev Stack
 
- Overview
+ 1. Introduction
+Setting up your development environment is the first step to success in any technical program or professional project. This lecture will guide you through the process of creating a robust, reproducible, and industry-standard environment for AI/ML and software engineering. You will learn not just what to install, but why each tool matters, how to automate your setup, and how to troubleshoot common issues.
 
-A professional development environment is crucial. In this lecture, you'll set up the exact tools you'll use throughout the entire 5-month program.
+ 2. Why Environment Setup Matters
+- Reproducibility: Ensures your code runs the same way on any machine, reducing "it works on my machine" problems.
+- Collaboration: Makes it easy to share code and onboard new team members.
+- Productivity: A well-configured environment saves time and reduces friction.
+- Professionalism: Mirrors the practices of top tech companies and research labs.
 
----
+ 3. Core Components of a Modern Dev Environment
 
- 🎯 Learning Objectives
+ 3.1. Python and Package Management
+- Python (3.10+ recommended): The primary language for AI/ML.
+- Virtual Environments: Use `python -m venv`, `conda`, or `poetry` to isolate dependencies per project.
+- Package Managers: `pip`, `conda`, `pipenv`, and `poetry` for installing libraries.
+- Best Practice: Always use a virtual environment. Never install packages globally unless absolutely necessary.
 
-- ✅ Install Python 3.9+ on your machine
-- ✅ Set up virtual environments (venv/conda)
-- ✅ Install and configure VS Code
-- ✅ Install Git and configure it globally
-- ✅ Verify your complete setup
+ 3.2. Version Control
+- Git: Industry-standard for tracking code changes and collaborating.
+- GitHub CLI: For interacting with GitHub from the terminal.
+- .gitignore: Prevents sensitive or unnecessary files from being tracked.
 
----
+ 3.3. Code Editor
+- VS Code: Highly extensible, with support for Python, Docker, Git, and remote development.
+- Extensions: Python, Docker, GitLens, Prettier, and Jupyter.
+- Settings Sync: Use VS Code’s built-in sync or Settings Sync extension to keep your setup portable.
 
- 📋 What You'll Install
+ 3.4. Terminal and Shell
+- bash/zsh/oh-my-zsh: Choose a shell that fits your workflow. `oh-my-zsh` adds productivity features.
+- Aliases and Functions: Speed up common tasks.
+- Prompt Customization: Use tools like `powerlevel10k` for informative prompts.
 
-1. Python 3.9+ - Core programming language
-2. Git - Version control
-3. VS Code - Code editor (or alternative IDE)
-4. Virtual Environment - Project isolation
-5. Essential Python packages - pandas, numpy, jupyter, etc.
+ 3.5. Containers and Cloud SDKs
+- Docker: For containerizing applications and ensuring consistent environments.
+- Docker Compose: For multi-container setups.
+- Cloud SDKs: AWS CLI, Azure CLI, GCP SDK for cloud integration.
 
----
+ 4. Step-by-Step Setup Guide
 
- Step-by-Step Installation
-
- 1. Python Installation
-
- macOS (using Homebrew)
-```bash
- Install Homebrew if not already installed
-/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-
- Install Python 3.9+
-brew install python@3.9
-
- Verify installation
-python3 --version
-```
-
- Windows
-```bash
- Download from https://www.python.org/downloads/
- Run installer, make sure to check "Add Python to PATH"
- Verify installation
-python --version
-```
-
- Linux (Ubuntu/Debian)
-```bash
-sudo apt update
-sudo apt install python3.9 python3-pip python3-venv
-
- Verify
-python3 --version
-```
-
- 2. Install Git
-
- macOS
-```bash
-brew install git
-git --version
-```
-
- Windows
-Download from: https://git-scm.com/download/win
-
- Linux
-```bash
-sudo apt install git
-git --version
-```
-
- 3. Configure Git Globally
-
-```bash
- Set your identity
-git config --global user.name "Your Full Name"
-git config --global user.email "your.email@example.com"
-
- Set default editor
-git config --global core.editor "vim"
-
- Verify configuration
-git config --global --list
-```
-
- 4. Virtual Environment Setup
-
- Using venv (Built-in)
-```bash
- Create project directory
-mkdir my-ml-project
-cd my-ml-project
-
- Create virtual environment
-python3 -m venv venv
-
- Activate virtual environment
+ 4.1. Install Python and Create a Virtual Environment
+```sh
  macOS/Linux
-source venv/bin/activate
-
+python3 -m venv .venv
+source .venv/bin/activate
  Windows
-venv\Scripts\activate
-
- You should see (venv) at start of terminal prompt
+python -m venv .venv
+.venv\Scripts\activate
 ```
+Install packages with `pip install -r requirements.txt`.
 
- Using conda (Alternative)
-```bash
- Install Anaconda from https://www.anaconda.com/
-
- Create conda environment
-conda create -n ml-env python=3.9
-
- Activate
-conda activate ml-env
-
- Deactivate when done
-conda deactivate
-```
-
- 5. Install VS Code
-
-1. Download from: https://code.visualstudio.com/
-2. Install following platform-specific instructions
-3. Launch VS Code
-
- Recommended Extensions
-```bash
- Install these extensions in VS Code:
- - Python (by Microsoft)
- - Pylance (by Microsoft)
- - Jupyter (by Microsoft)
- - Git Graph
- - Better Comments
- - Code Runner
-```
-
- 6. Install Essential Python Packages
-
-```bash
- Activate your virtual environment first!
-source venv/bin/activate   macOS/Linux
- OR
-venv\Scripts\activate   Windows
-
- Upgrade pip
-pip install --upgrade pip
-
- Install essential packages
-pip install jupyter numpy pandas matplotlib seaborn scikit-learn
-
- Verify installation
-python -c "import numpy; print(numpy.__version__)"
-```
-
----
-
- 🔧 Configuration Tips
-
- Create .gitignore File
-
-```bash
- In your project root
-cat > .gitignore << 'EOF'
- Python
-__pycache__/
-*.py[cod]
-*$py.class
-*.so
-.Python
-venv/
-env/
-ENV/
-
- Jupyter
-.ipynb_checkpoints/
-*.ipynb
-
- IDE
-.vscode/
-.idea/
-*.swp
-*.swo
-
- OS
-.DS_Store
-Thumbs.db
-
- Data
-*.csv
-*.xlsx
-data/
-
- Logs
-*.log
-EOF
-```
-
- Create requirements.txt
-
-```bash
- Generate from current environment
-pip freeze > requirements.txt
-
- Example requirements.txt:
- numpy==1.21.0
- pandas==1.3.0
- jupyter==1.0.0
- scikit-learn==0.24.2
-```
-
- VS Code Settings
-
-Create `.vscode/settings.json`:
-
-```json
-{
-  "python.linting.enabled": true,
-  "python.linting.pylintEnabled": true,
-  "python.formatting.provider": "black",
-  "editor.formatOnSave": true,
-  "editor.rulers": [80, 120],
-  "[python]": {
-    "editor.defaultFormatter": "ms-python.python",
-    "editor.formatOnSave": true,
-    "editor.codeActionsOnSave": {
-      "source.organizeImports": true
-    }
-  }
-}
-```
-
----
-
- ✅ Verification Checklist
-
-After setup, verify everything works:
-
-```bash
- Check Python
-python3 --version   Should be 3.9+
-
- Check Git
-git --version
-
- Check virtual environment (should show path to your env)
-which python
-
- Check packages
-python -c "import numpy, pandas, jupyter; print('All good!')"
-
- Start Jupyter
-jupyter notebook   Should open in browser
-```
-
----
-
- 🆘 Troubleshooting
-
- Python not found
-- macOS: Try `python3` instead of `python`
-- Windows: Add Python to PATH (run installer again, select "Add Python to PATH")
-
- Virtual environment won't activate
-- macOS/Linux: Make sure you're in correct directory and file has execute permissions
-- Windows: Run PowerShell as Administrator
-
- Git configuration issues
-```bash
- Reset configuration
-git config --global --unset user.name
-git config --global --unset user.email
-
- Reconfigure
+ 4.2. Install Git and Configure User Info
+```sh
 git config --global user.name "Your Name"
-git config --global user.email "your.email@example.com"
+git config --global user.email "your@email.com"
 ```
+Clone a repository: `git clone <repo-url>`
+
+ 4.3. Set Up VS Code
+- Download from [code.visualstudio.com](https://code.visualstudio.com/)
+- Install recommended extensions (Python, Docker, GitLens, Jupyter)
+- Sync settings for portability
+
+ 4.4. Configure Your Shell
+- Install `zsh` and `oh-my-zsh` for productivity
+- Add aliases and functions to `.zshrc` or `.bashrc`
+- Customize your prompt for context (e.g., show git branch, Python venv)
+
+ 4.5. Install Docker and Cloud SDKs
+- [Docker Desktop](https://www.docker.com/products/docker-desktop/)
+- [AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html)
+- [Azure CLI](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli)
+- [Google Cloud SDK](https://cloud.google.com/sdk/docs/install)
+
+ 4.6. Automate Your Setup
+- Use a `Makefile` or shell script to automate environment setup and testing
+- Example `Makefile` targets: `setup`, `test`, `lint`, `clean`
+- Document every manual step in a `README.md` or `SETUP.md`
+
+ 4.7. Validate Your Environment
+- Run `python --version`, `git --version`, `docker --version`, etc.
+- Run a sample script or notebook to ensure all dependencies work
+
+ 5. Troubleshooting & Best Practices
+- Common Issues: PATH problems, conflicting Python versions, missing dependencies
+- Solutions: Use `which python`, `pip list`, and check environment variables
+- Never commit secrets: Use `.env` files and add them to `.gitignore`
+- Reproducibility: Use `requirements.txt` or `environment.yml` for dependencies
+- Onboarding: Keep setup instructions up to date for new team members
+
+ 6. Advanced Topics
+- Dev Containers: Use VS Code’s `devcontainer.json` for fully reproducible environments
+- Remote Development: Use SSH or Codespaces for cloud-based coding
+- Dotfiles: Version control your shell/editor configs for portability
+
+ 7. Resources
+- [Official Python Setup Guide](https://realpython.com/installing-python/)
+- [VS Code Remote Development](https://code.visualstudio.com/docs/remote/remote-overview)
+- [GitHub CLI Documentation](https://cli.github.com/manual/)
+- [Docker Getting Started](https://docs.docker.com/get-started/)
+- [Awesome Dev Environment](https://github.com/jondot/awesome-devenv)
+- [VS Code Dev Containers](https://code.visualstudio.com/docs/remote/containers)
 
 ---
-
- 📚 Next Steps
-
-1. Complete all installation steps above
-2. Run the verification checklist
-3. Create your first virtual environment
-4. Write a simple Python script and run it
-5. Ready for Git lecture!
-
----
-
- 📖 Additional Resources
-
-- [Python Official Docs](https://docs.python.org/3/)
-- [Virtual Environments Guide](https://docs.python.org/3/tutorial/venv.html)
-- [VS Code Python Setup](https://code.visualstudio.com/docs/python/python-tutorial)
-- [Git Installation](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git)

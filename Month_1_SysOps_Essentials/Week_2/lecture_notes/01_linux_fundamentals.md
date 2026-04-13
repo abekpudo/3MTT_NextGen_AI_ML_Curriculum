@@ -1,450 +1,428 @@
- Lecture 1: Linux Fundamentals
+ Linux Fundamentals: Mastering the Command Line
 
- What is Linux?
+ 1. Introduction
+Linux is the foundation of cloud infrastructure, ML servers, and development environments. This lecture provides hands-on mastery of essential Linux commands, file system navigation, permissions management, and system monitoring.
 
-Linux is a free, open-source operating system kernel created by Linus Torvalds in 1991. It powers everything from web servers to smartphones.
+ 2. Why Linux Matters
+- Cloud Infrastructure: AWS, GCP, Azure run on Linux
+- ML/AI Servers: Most ML frameworks optimized for Linux
+- DevOps & Automation: Shell scripting enables powerful automation
+- Professional Development: Essential for technical roles
 
----
+ 3. Linux Filesystem Hierarchy
 
- 🎯 Learning Objectives
-
-- Understand Linux OS architecture
-- Navigate the file system
-- Understand users and permissions
-- Work with file permissions
-- Master directory operations
-
----
-
- 📚 Linux Architecture
-
- Kernel
-The core of Linux that manages:
-- Hardware resources (CPU, memory, disk)
-- Process scheduling
-- Memory management
-- Device drivers
-
- Shell
-Interface between user and kernel. We'll focus on Bash (Bourne Again Shell).
-
- File System
-Hierarchical structure where everything is a file.
-
----
-
- 📁 Linux File System Hierarchy
-
-```
-/                           Root directory
-├── bin/                     Essential command binaries
-├── etc/                     Configuration files
-├── home/                    User home directories
-│   ├── user1/
-│   └── user2/
-├── opt/                     Optional software
-├── root/                    Root user home
-├── tmp/                     Temporary files
-├── usr/                     User programs and data
-│   ├── bin/                 User command binaries
-│   ├── local/               Locally installed software
-│   └── share/               Shared data
-├── var/                     Variable data
-│   ├── log/                 Log files
-│   └── tmp/                 Temporary variable data
-├── dev/                     Device files
-├── lib/                     System libraries
-├── media/                   Mount points for media
-└── proc/                    Process information
-```
-
- Key Directories for Developers
-
-| Directory | Purpose |
-|-----------|---------|
-| `~` or `$HOME` | User's home directory |
-| `~/Desktop` | Desktop files |
-| `~/Documents` | Documents |
-| `~/Downloads` | Downloaded files |
-| `/usr/bin` | User executable programs |
-| `/usr/local/bin` | Locally installed programs |
-| `/tmp` | Temporary files (cleared on reboot) |
-| `/var/log` | System logs |
-| `/etc` | System configuration |
-
----
-
- 👥 Users and Groups
-
- User Types
-
-1. Root User (uid 0)
-   - Super user with all permissions
-   - Should be used carefully
-   - Use `sudo` for temporary elevation
-
-2. System Users
-   - Created for services (www-data, mysql, etc.)
-   - Limited permissions
-
-3. Regular Users
-   - Normal user accounts
-   - Limited to own files and directories
-
- User Management
-
+ 3.1. Directory Structure
 ```bash
- Current user
-whoami                       Show username
-id                           Show user and group IDs
-groups                       Show groups for current user
-
- User information
-finger username              User information
-who                          Logged in users
-last                         Login history
-
- Switch user
-su username                  Switch user (with password)
-sudo command                 Run with elevated privileges
-sudo su                      Become root
-
- Add user (admin only)
-sudo useradd username
-sudo adduser username        Interactive
-
- Change password
-passwd
-passwd username              Admin can change others' passwords
-
- Remove user
-sudo userdel username
+ Root directory structure
+/
+|-- bin/      Essential binaries
+|-- sbin/     System binaries
+|-- etc/      Configuration files
+|-- home/     User directories
+|-- var/      Variable data (logs, cache)
+|-- usr/      User programs
+|-- tmp/      Temporary files
+|-- opt/      Optional packages
+|-- lib/      System libraries
+|-- dev/      Device files
+|-- proc/     Process information
+|-- sys/      System information
 ```
 
----
-
- 🔐 File Permissions
-
- Understanding Permissions
-
-```
-drwxr-xr-x  5  user  group  160  Mar 15 10:30  folder/
-^          ^  ^     ^      ^    ^               ^
-|          |  |     |      |    |               |
-type       |  owner group  size date             name
-           |
-        permissions
-
-Permissions: 755
-            |||
-            ||| 
-    rwx r-x r-x
-Owner Group Other
-```
-
- Permission Breakdown
-
-Three types of permissions:
-- r (read): 4 - Can read file contents or list directory
-- w (write): 2 - Can modify file or create/delete in directory
-- x (execute): 1 - Can run file as program or enter directory
-
-Three categories:
-- Owner (first 3): User who owns the file
-- Group (middle 3): Users in the file's group
-- Other (last 3): Everyone else
-
- Examples
-
-```
-755 = rwxr-xr-x
-  Owner: read + write + execute = 4+2+1 = 7
-  Group: read + execute = 4+1 = 5
-  Other: read + execute = 4+1 = 5
-  Typical for executable programs and directories
-
-644 = rw-r--r--
-  Owner: read + write = 4+2 = 6
-  Group: read = 4
-  Other: read = 4
-  Typical for regular files
-
-600 = rw-------
-  Owner: read + write = 4+2 = 6
-  Group: nothing = 0
-  Other: nothing = 0
-  Sensitive files (keys, passwords)
-
-700 = rwx------
-  Owner: read + write + execute = 7
-  Group: nothing = 0
-  Other: nothing = 0
-  Private executable directories
-```
-
- Changing Permissions
-
+ 3.2. Navigation Commands
 ```bash
- Numeric method
-chmod 755 file.txt           Set to 755
-chmod 644 script.sh          Set to 644
+ Basic navigation
+pwd                     Print working directory
+ls                      List directory contents
+ls -la                  List all files with details
+ls -lh                  Human-readable file sizes
+cd /path/to/dir         Change directory
+cd ..                   Go up one level
+cd ~                    Go to home directory
+cd -                    Previous directory
 
- Symbolic method
-chmod +x script.sh           Add execute permission
-chmod -w file.txt            Remove write permission
-chmod u+rwx file.txt         User: add read, write, execute
-chmod g-w file.txt           Group: remove write
-chmod o-rwx file.txt         Others: remove all
-
- Recursive (for directories)
-chmod -R 755 folder/         Change folder and all contents
+ Directory creation and removal
+mkdir new_directory     Create directory
+mkdir -p path/to/deep/dir   Create nested directories
+rmdir empty_dir         Remove empty directory
+rm -r directory         Remove directory and contents
 ```
 
- Changing Ownership
+ 4. File Operations
 
+ 4.1. File Manipulation
+```bash
+ File creation and viewing
+touch new_file.txt      Create empty file
+echo "Hello World" > file.txt   Write to file
+echo "Append" >> file.txt       Append to file
+cat file.txt            View file content
+less file.txt           View file with pagination
+more file.txt           View file with simple pagination
+
+ File copying and moving
+cp source.txt dest.txt          Copy file
+cp -r source_dir/ dest_dir/     Copy directory
+mv old_name.txt new_name.txt    Rename/move file
+mv file.txt /path/to/dest/      Move file
+
+ File deletion
+rm file.txt             Remove file
+rm -f file.txt          Force remove (no prompt)
+rm -r directory         Remove directory recursively
+rm -rf directory        Force remove directory
+```
+
+ 4.2. File Content Operations
+```bash
+ Text searching and filtering
+grep "pattern" file.txt          Search for pattern
+grep -r "pattern" /path/         Recursive search
+grep -i "pattern" file.txt       Case-insensitive search
+grep -n "pattern" file.txt       Show line numbers
+grep -v "pattern" file.txt       Invert match
+
+ Text processing
+head -n 10 file.txt      Show first 10 lines
+tail -n 10 file.txt      Show last 10 lines
+tail -f file.txt         Follow file (live updates)
+wc -l file.txt           Count lines
+wc -w file.txt           Count words
+wc -c file.txt           Count characters
+
+ Text editing with sed
+sed 's/old/new/g' file.txt       Replace text
+sed '1,5d' file.txt               Delete lines 1-5
+sed -n '10,20p' file.txt          Print lines 10-20
+```
+
+ 5. File Permissions and Ownership
+
+ 5.1. Understanding Permissions
+```bash
+ View permissions
+ls -la file.txt
+ Output: -rw-r--r-- 1 user group 1024 Jan 1 12:00 file.txt
+           ^^^ ^^^ ^^^
+           |   |   |
+        owner group others
+        rwx rwx rwx
+```
+
+ 5.2. Permission Commands
+```bash
+ Symbolic notation
+chmod u+x file.txt        Add execute for owner
+chmod g-w file.txt        Remove write for group
+chmod o+r file.txt        Add read for others
+chmod a+x file.txt        Add execute for all
+
+ Numeric notation (4=read, 2=write, 1=execute)
+chmod 755 file.txt        rwxr-xr-x (owner: rwx, group: r-x, others: r-x)
+chmod 644 file.txt        rw-r--r-- (owner: rw, group: r, others: r)
+chmod 777 file.txt        rwxrwxrwx (all permissions)
+chmod 600 file.txt        rw------- (owner only)
+
+ Directory permissions
+chmod 755 directory/      Standard directory permissions
+chmod 700 private_dir/    Private directory (owner only)
+```
+
+ 5.3. Ownership Management
 ```bash
  Change owner
-chown newuser file.txt
+chown new_user file.txt
+chown new_user:new_group file.txt
 
- Change owner and group
-chown newuser:newgroup file.txt
+ Change group only
+chgrp new_group file.txt
 
- Change group
-chgrp newgroup file.txt
+ Recursive ownership change
+chown -R user:group directory/
 
- Recursive
-chown -R user:group folder/
+ View ownership
+ls -ln file.txt           Show numeric IDs
+stat file.txt             Detailed file information
 ```
+
+ 6. Process Management
+
+ 6.1. Viewing Processes
+```bash
+ Process listing
+ps                       Current user processes
+ps aux                   All processes in detail
+ps -ef                   All processes with full format
+top                      Interactive process viewer
+htop                     Enhanced top (if installed)
+
+ Process searching
+ps aux | grep python     Find Python processes
+pgrep python             Find process IDs
+pidof python             Find process ID of command
+```
+
+ 6.2. Process Control
+```bash
+ Process termination
+kill 1234                Graceful termination
+kill -9 1234             Force termination
+killall python           Kill all processes named python
+pkill python             Kill processes by name
+
+ Process signals
+kill -l                  List all signals
+kill -TERM 1234          Termination signal (15)
+kill -KILL 1234          Kill signal (9)
+kill -HUP 1234           Hangup signal (1)
+```
+
+ 6.3. Background and Foreground
+```bash
+ Run in background
+command &                Start command in background
+jobs                     List background jobs
+fg %1                    Bring job 1 to foreground
+bg %1                    Resume job 1 in background
+kill %1                  Kill background job 1
+
+ Process control
+Ctrl+C                   Interrupt foreground process
+Ctrl+Z                   Suspend foreground process
+```
+
+ 7. System Monitoring
+
+ 7.1. System Information
+```bash
+ System overview
+uname -a                 System information
+df -h                    Disk usage (human-readable)
+free -h                  Memory usage (human-readable)
+uptime                   System uptime
+date                     Current date/time
+
+ Hardware information
+lscpu                    CPU information
+lsblk                    Block devices
+lsusb                    USB devices
+lspci                    PCI devices
+```
+
+ 7.2. Resource Monitoring
+```bash
+ Real-time monitoring
+top                      Process and resource usage
+htop                     Enhanced top
+iotop                    I/O monitoring
+nethogs                  Network usage by process
+
+ Log monitoring
+tail -f /var/log/syslog      Follow system log
+journalctl -f                 Follow systemd logs
+dmesg | tail                  Kernel messages
+```
+
+ 8. Package Management
+
+ 8.1. APT (Debian/Ubuntu)
+```bash
+ Package operations
+sudo apt update            Update package lists
+sudo apt upgrade           Upgrade packages
+sudo apt install package   Install package
+sudo apt remove package    Remove package
+sudo apt autoremove        Remove unused packages
+
+ Package information
+apt search package         Search for packages
+apt show package           Show package details
+apt list --installed       List installed packages
+```
+
+ 8.2. YUM/DNF (RedHat/CentOS)
+```bash
+ Package operations
+sudo yum update            Update packages
+sudo yum install package   Install package
+sudo yum remove package    Remove package
+sudo yum clean all         Clean cache
+
+ Package information
+yum search package         Search packages
+yum info package          Package information
+```
+
+ 8.3. Homebrew (macOS)
+```bash
+ Package operations
+brew update               Update Homebrew
+brew install package      Install package
+brew uninstall package    Remove package
+brew cleanup              Clean up
+
+ Package information
+brew search package       Search packages
+brew info package        Package information
+```
+
+ 9. Text Processing Tools
+
+ 9.1. Advanced Text Processing
+```bash
+ Sort and unique
+sort file.txt             Sort lines
+sort -n file.txt          Sort numerically
+sort -r file.txt          Reverse sort
+uniq file.txt             Remove duplicate lines
+sort file.txt | uniq      Sort and remove duplicates
+
+ Cut and paste
+cut -d':' -f1,3 file.txt    Extract fields (delimiter ':', fields 1,3)
+cut -c1-10 file.txt          Extract characters 1-10
+paste file1.txt file2.txt     Merge files line by line
+
+ Join files
+join -t':' file1.txt file2.txt   Join on common field
+```
+
+ 9.2. AWK Examples
+```bash
+ AWK basics
+awk '{print $1}' file.txt        Print first column
+awk '{print $NF}' file.txt       Print last column
+awk '{print NR, $0}' file.txt    Print line number and content
+
+ AWK with conditions
+awk '$3 > 100 {print $1, $3}' file.txt   Print if column 3 > 100
+awk '/pattern/ {print}' file.txt         Print lines matching pattern
+
+ AWK calculations
+awk '{sum += $1} END {print sum}' file.txt   Sum first column
+awk '{sum += $1; count++} END {print sum/count}' file.txt   Average
+```
+
+ 10. Practical Examples
+
+ 10.1. File Management Workflow
+```bash
+ Create project structure
+mkdir -p project/{src,docs,tests,data}
+cd project
+touch src/main.py
+touch docs/README.md
+touch tests/test_main.py
+
+ Set permissions
+chmod 755 src/
+chmod 644 src/main.py
+chmod +x src/main.py   Make executable
+
+ Find and organize
+find . -name ".py" -exec chmod +x {} \;
+find . -name ".log" -delete
+find . -type f -name ".tmp" -exec rm {} \;
+```
+
+ 10.2. Log Analysis
+```bash
+ Analyze web server logs
+grep "ERROR" /var/log/nginx/access.log | wc -l
+grep "404" /var/log/nginx/access.log | awk '{print $1}' | sort | uniq -c | sort -nr
+tail -1000 /var/log/nginx/access.log | grep "GET" | cut -d' ' -f7 | sort | uniq -c | sort -nr
+```
+
+ 10.3. System Maintenance
+```bash
+ Disk cleanup
+find /tmp -mtime +7 -delete
+find /var/log -name ".log" -mtime +30 -delete
+du -sh /home/ | sort -hr | head -10
+
+ Process monitoring
+ps aux | sort -rk 3,3 | head -10   Top 10 CPU processes
+ps aux | sort -rk 4,4 | head -10   Top 10 memory processes
+```
+
+ 11. Best Practices
+
+ 11.1. Command Line Safety
+```bash
+ Safe file operations
+cp file.txt file.txt.backup     Backup before editing
+mv file.txt file.txt.bak        Rename before deletion
+
+ Use confirmations
+rm -i file.txt                  Confirm before deletion
+mv -i source dest                Confirm before overwrite
+
+ Test commands first
+echo "rm .log"                  Preview command
+find . -name ".log" -type f     Find files before deletion
+```
+
+ 11.2. Productivity Tips
+```bash
+ Command history
+history | grep command           Find previous commands
+Ctrl+R                           Reverse search history
+!!                               Repeat last command
+!123                             Repeat command 123 from history
+
+ Aliases for common tasks
+alias ll='ls -la'
+alias la='ls -la'
+alias grep='grep --color=auto'
+alias ..='cd ..'
+```
+
+ 12. Troubleshooting Common Issues
+
+ 12.1. Permission Issues
+```bash
+ Check permissions
+ls -la file.txt
+stat file.txt
+
+ Fix permissions
+chmod 644 file.txt               Standard file permissions
+chmod 755 directory/             Standard directory permissions
+chown user:group file.txt         Fix ownership
+```
+
+ 12.2. Disk Space Issues
+```bash
+ Find large files
+du -ah / | sort -rh | head -20
+find / -type f -size +100M 2>/dev/null
+
+ Clean up
+sudo apt autoremove
+sudo apt clean
+rm -rf ~/.cache/
+```
+
+ 12.3. Process Issues
+```bash
+ Find zombie processes
+ps aux | awk '$8 ~ /^Z/ {print $2}'
+
+ Kill hanging processes
+kill -9 $(ps aux | grep 'process_name' | awk '{print $2}')
+```
+
+ 13. Resources
+
+ 13.1. Documentation
+- [Linux Command Line Guide](https://www.gnu.org/software/bash/manual/)
+- [Filesystem Hierarchy Standard](https://refspecs.linuxfoundation.org/FHS_3.0/)
+- [Linux Permissions Guide](https://linuxize.com/post/linux-file-permissions/)
+
+ 13.2. Practice Tools
+- [LinuxJourney](https://linuxjourney.com/)
+- [OverTheBandit](https://overthewire.org/wargames/bandit/)
+- [ExplainShell](https://explainshell.com/)
 
 ---
 
- 📂 Directory Operations
-
- Create and Remove
-
-```bash
- Create directory
-mkdir folder
-
- Create nested
-mkdir -p a/b/c/d
-
- Remove directory (must be empty)
-rmdir folder
-
- Remove with contents (dangerous!)
-rm -r folder
-```
-
- Move and Copy
-
-```bash
- Copy file
-cp source.txt destination.txt
-
- Copy with contents
-cp -r sourcefolder destfolder
-
- Copy preserving attributes
-cp -p source.txt destination.txt
-
- Move/rename
-mv oldname.txt newname.txt
-
- Move to different location
-mv file.txt path/to/directory/
-```
-
- List and View
-
-```bash
- List files
-ls
-ls -l                        Detailed
-ls -la                       Include hidden
-ls -lh                       Human-readable sizes
-ls -lS                       Sort by size
-ls -lt                       Sort by modification time
-ls -R                        Recursive
-
- Tree view (install if needed)
-tree
-tree -L 2                    Limit depth
-```
-
----
-
- 📝 Working with Files
-
- View Files
-
-```bash
- Entire file
-cat file.txt
-cat file1.txt file2.txt      Multiple files
-
- First/last lines
-head file.txt
-head -n 20 file.txt          First 20 lines
-tail file.txt
-tail -n 50 file.txt          Last 50 lines
-tail -f file.txt             Follow file (watch new lines)
-
- Page through
-less file.txt                Space to page, q to quit
-more file.txt                Simpler version
-
- Word and line count
-wc file.txt                  Lines, words, bytes
-wc -l file.txt               Lines only
-```
-
- Create and Edit
-
-```bash
- Create empty file
-touch file.txt
-
- Create with content
-cat > file.txt << 'EOF'
-This is line 1
-This is line 2
-EOF
-
- Append to file
-echo "New line" >> file.txt
-
- Overwrite file
-echo "Replaced content" > file.txt
-```
-
- Search and Compare
-
-```bash
- Search within file
-grep "pattern" file.txt
-grep -i "pattern" file.txt   Case insensitive
-grep -n "pattern" file.txt   Show line numbers
-grep -r "pattern" .          Recursive search
-
- Compare files
-diff file1.txt file2.txt
-
- Find files
-find . -name "*.txt"
-find . -type f -size +1M     Larger than 1MB
-find . -mtime -1             Modified within 1 day
-```
-
----
-
- 🔄 Process Management
-
- View Processes
-
-```bash
- List processes
-ps                           Current shell processes
-ps aux                       All processes
-ps aux | grep python         Find specific process
-
- Monitor processes
-top                          Interactive process monitor
-top -u username              Filter by user
-
- Background/Foreground
-command &                    Run in background
-fg                           Bring to foreground
-bg                           Run stopped process in background
-jobs                         List background jobs
-```
-
- Kill Processes
-
-```bash
-kill <pid>                   Terminate process
-kill -9 <pid>                Force terminate
-killall python               Kill all processes by name
-pkill -f "pattern"           Kill by pattern
-```
-
----
-
- 💾 Disk and Storage
-
-```bash
- Disk usage
-df -h                        Disk space summary
-du -sh folder/               Directory size
-du -sh *                     Size of all items in current dir
-du -sh .[^.]* *              Include hidden files
-
- Free memory
-free -h                      Memory usage
-```
-
----
-
- 🔍 System Information
-
-```bash
- OS Information
-uname -a                     All system information
-uname -r                     Kernel version
-
- Hostname
-hostname
-hostname -I                  IP address
-
- Uptime
-uptime                       How long system has been running
-
- Date and Time
-date
-date +"%Y-%m-%d %H:%M:%S"    Custom format
-
- System load
-cat /proc/loadavg
-```
-
----
-
- 🎓 Best Practices
-
-1. Be careful with `rm` - There's no trash can in Linux!
-2. Use `sudo` sparingly - Only when necessary
-3. Organize your files - Use clear directory structure
-4. Check permissions - Use `ls -l` to verify
-5. Create backups - Before making changes
-6. Use relative paths - When possible (more portable)
-
----
-
- ✅ What You Should Know
-
-- [ ] Navigate file system with pwd, cd, ls
-- [ ] Understand absolute vs relative paths
-- [ ] Create, move, copy, delete files and directories
-- [ ] Understand and change file permissions
-- [ ] View and search file contents
-- [ ] Monitor processes and system resources
-- [ ] Understand users and groups
-- [ ] Know Linux directory structure
-
----
-
- 📚 Next Steps
-
-1. Practice commands in exercises
-2. Learn Bash scripting next week
-3. Get comfortable with Linux command line
-4. Start writing simple scripts
-
----
-
- 🔗 Additional Resources
-
-- [Linux File System Explained](https://www.linux.com/what-is-linux/)
-- [File Permissions Tutorial](https://www.gnu.org/software/coreutils/manual/coreutils.htmlFile-permissions)
-- [Linux Man Pages](https://man7.org/linux/man-pages/)
-- [Linux Journey Tutorial](https://linuxjourney.com/)
+Next Steps: Practice these commands in your terminal environment before moving to shell scripting.

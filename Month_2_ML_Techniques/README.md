@@ -399,39 +399,140 @@ Evaluation Rubric:
 
  Core Libraries
 ```python
-import pandas as pd            Data manipulation
-import numpy as np              Numerical computing
+# Data Manipulation & Analysis
+import pandas as pd            # Data manipulation and analysis
+import numpy as np              # Numerical computing
+
+# Scikit-Learn - Core ML Library
 from sklearn.model_selection import (
-    train_test_split,
-    cross_val_score,
-    GridSearchCV,
-    StratifiedKFold
+    train_test_split,           # Data splitting strategies
+    cross_val_score,            # Cross-validation
+    GridSearchCV,               # Exhaustive hyperparameter search
+    RandomizedSearchCV,         # Random hyperparameter search
+    StratifiedKFold,            # Stratified cross-validation
+    learning_curve              # Learning curve analysis
 )
 from sklearn.preprocessing import (
-    StandardScaler,
-    LabelEncoder,
-    OneHotEncoder,
-    RobustScaler
+    StandardScaler,             # Z-score normalization
+    MinMaxScaler,               # Min-max scaling
+    LabelEncoder,               # Label encoding
+    OneHotEncoder,              # One-hot encoding
+    RobustScaler,               # Robust to outliers
+    PolynomialFeatures          # Polynomial feature generation
 )
-from sklearn.ensemble import RandomForestClassifier, GradientBoostingClassifier
-from sklearn.linear_model import LogisticRegression
+from sklearn.ensemble import (
+    RandomForestClassifier,     # Random Forest
+    GradientBoostingClassifier, # Gradient Boosting
+    AdaBoostClassifier,         # AdaBoost
+    VotingClassifier,           # Ensemble voting
+    StackingClassifier          # Stacking ensemble
+)
+from sklearn.linear_model import (
+    LogisticRegression,         # Logistic Regression
+    LinearRegression,           # Linear Regression
+    Ridge, Lasso, ElasticNet    # Regularized regression
+)
 from sklearn.tree import DecisionTreeClassifier
+from sklearn.svm import SVC
+from sklearn.naive_bayes import GaussianNB
+from sklearn.neighbors import KNeighborsClassifier
 from sklearn.metrics import (
-    classification_report,
-    confusion_matrix,
-    roc_auc_score,
-    roc_curve
+    classification_report,     # Detailed classification metrics
+    confusion_matrix,           # Confusion matrix
+    roc_auc_score,              # ROC AUC score
+    roc_curve,                  # ROC curve
+    precision_recall_curve,     # Precision-recall curve
+    f1_score,                   # F1 score
+    mean_squared_error,          # MSE
+    r2_score                    # R² score
 )
-import xgboost as xgb
+from sklearn.pipeline import Pipeline, make_pipeline
+from sklearn.compose import ColumnTransformer
+from sklearn.impute import SimpleImputer, KNNImputer
+from sklearn.feature_selection import SelectKBest, mutual_info_classif
+
+# Advanced ML Libraries
+import xgboost as xgb           # Extreme Gradient Boosting
+import lightgbm as lgb         # Light Gradient Boosting
+
+# Optimization & Experiment Tracking
+import optuna                   # Bayesian optimization
+import mlflow                   # Experiment tracking
+from scipy.stats import randint, uniform, loguniform
+
+# Visualization
 import matplotlib.pyplot as plt
 import seaborn as sns
+from sklearn.inspection import permutation_importance
+
+# Utilities
+import joblib                   # Model serialization
+import json                     # JSON handling
+import warnings
+warnings.filterwarnings('ignore')
 ```
 
- Advanced Libraries (Optional)
-- `optuna` - Bayesian hyperparameter optimization
-- `hyperopt` - Another optimization library
-- `shap` - Model explainability
-- `eli5` - Model interpretation
+ Advanced Libraries
+- `optuna` - Bayesian hyperparameter optimization with pruning
+- `mlflow` - Complete ML lifecycle management
+- `shap` - Model explainability and interpretability
+- `imbalanced-learn` - Handling imbalanced datasets (SMOTE, ADASYN)
+- `category_encoders` - Advanced categorical encoding
+- `feature-engine` - Feature engineering pipelines
+
+ Quick Reference: Enhanced Class Structures from Lecture Notes
+
+EDA & Data Cleaning:
+```python
+# From 01_eda_and_visualization.md
+from lecture_notes.eda_utils import EDAAnalyzer, ComprehensiveEDA
+eda = ComprehensiveEDA(df)
+eda.run_full_analysis(target_col='target')
+```
+
+Data Cleaning:
+```python
+# From 02_data_cleaning.md
+from lecture_notes.cleaning_utils import DataCleaningPipeline
+cleaner = DataCleaningPipeline(df)
+clean_df = cleaner.run_full_cleaning_pipeline()
+```
+
+Feature Engineering:
+```python
+# From 03_feature_engineering.md
+from lecture_notes.feature_utils import FeatureEngineeringPipeline
+fe = FeatureEngineeringPipeline()
+transformed = fe.fit_transform(df)
+```
+
+Model Training:
+```python
+# From enhanced lecture notes
+from lecture_notes.model_utils import (
+    ComprehensiveRegressionFramework,
+    ClassificationFramework,
+    ComprehensiveMLPipeline
+)
+```
+
+Hyperparameter Tuning:
+```python
+# From 01_hyperparameter_tuning.md
+from lecture_notes.tuning_utils import (
+    ComprehensiveHyperparameterTuner,
+    OptunaHyperparameterOptimizer
+)
+```
+
+ Model Evaluation:
+```python
+# From 03_model_evaluation.md
+from lecture_notes.evaluation_utils import (
+    ComprehensiveModelEvaluator,
+    NestedCrossValidator
+)
+```
 
 ---
 
